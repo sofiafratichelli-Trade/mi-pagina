@@ -22,7 +22,7 @@ body{font-family:var(--f1);background:var(--of);color:var(--bk);font-size:14px}
 .tab{padding:10px 16px;font-family:var(--f1);font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--gy);border-bottom:2.5px solid transparent;transition:all .15s;white-space:nowrap}
 .tab.act{color:var(--gd);border-bottom-color:var(--g);font-weight:700}
 /* FILTERS */
-.fbar{background:#fff;border-bottom:1px solid rgba(0,0,0,.06);padding:10px 20px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.fbar{background:#fff;border-top:1px solid rgba(0,0,0,.06);padding:8px 20px 10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .flbl{font-family:var(--f2);font-size:11px;color:var(--gy);font-weight:600;text-transform:uppercase;letter-spacing:.04em}
 .fsep{width:1px;height:24px;background:rgba(0,0,0,.1)}
 /* PROVINCE DD */
@@ -81,7 +81,7 @@ tr:hover td{background:#fafaf8}
 .cf{height:100%;border-radius:9px;display:flex;align-items:center;padding-left:6px;font-size:10px;font-weight:700;color:#fff}
 /* GAUGES */
 .gauges{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
-.gc{background:#fff;border-radius:16px;padding:18px;box-shadow:var(--sh);text-align:center}
+.gc{background:#fff;border-radius:16px;padding:18px;box-shadow:var(--sh);text-align:center;min-width:0}
 .gv{font-size:36px;font-weight:900;line-height:1;margin-top:6px}
 .gl{font-family:var(--f2);font-size:12px;color:var(--gy);margin-top:4px}
 .gs{font-family:var(--f2);font-size:11px;color:var(--gy);margin-top:2px}
@@ -122,17 +122,16 @@ tr:hover td{background:#fafaf8}
     <button class="tab act" onclick="goTab('s1',this)">Desempeño Nolix</button>
     <button class="tab" onclick="goTab('s2',this)">Comercios &amp; MODO</button>
     <button class="tab" onclick="goTab('s3',this)">Mapa</button>
-    <button class="tab" onclick="goTab('s4',this)">Insights</button>
     <button class="tab" onclick="goTab('s5',this)">Financiero 🔒</button>
     <button class="tab" onclick="goTab('s6',this)">Ciudades</button>
+    <button class="tab" onclick="goTab('s4',this)">Insights</button>
   </div>
-</div>
 
 <div class="fbar">
   <span class="flbl">Provincia:</span>
   <div class="pdw">
     <button class="pdb" onclick="tDD(event)"><span id="plbl">Total País</span><span>▾</span></button>
-    <div class="pdp" id="pdp">
+    <div class="pdp" id="pdp" onclick="event.stopPropagation()">
       <div class="pi"><input type="checkbox" id="cball" checked onchange="tAll(this)"><label for="cball" style="cursor:pointer;font-weight:700">Total País (todas)</label></div>
       <div class="pdiv"></div>
 <div class="pi"><input type="checkbox" class="pcb" value="AMBA" onchange="tP(this)"><label>AMBA</label></div>
@@ -161,6 +160,8 @@ tr:hover td{background:#fafaf8}
     <button class="pill act" data-m="mayo"    onclick="tM('mayo',this)">May</button>
   </div>
 </div>
+</div>
+
 
 <div class="alrt" id="alrt" style="display:none;margin:10px 20px 0"><span style="font-size:18px">⛔</span><span id="alrt-t"></span></div>
 
@@ -173,8 +174,18 @@ tr:hover td{background:#fafaf8}
     <div class="kpi"><div class="kl">Tasa de éxito</div><div class="kv" id="kE">—</div><span id="kEs" class="bg">—</span></div>
   </div>
   <div class="gauges">
-    <div class="gc"><canvas id="gC" height="80"></canvas><div class="gv" id="gV">—</div><div class="gl" id="gL">Período seleccionado</div><div class="gs" id="gS">—</div></div>
-    <div class="gc"><canvas id="gAC" height="80"></canvas><div class="gv" id="gAV">—</div><div class="gl">Objetivo anual 2026</div><div class="gs" id="gAS">133.546 visitas meta</div></div>
+    <div class="gc">
+      <svg id="gC" viewBox="0 0 200 110" width="100%" height="110" style="display:block;max-width:260px;margin:0 auto"></svg>
+      <div class="gv" id="gV">—</div>
+      <div class="gl" id="gL">Período seleccionado</div>
+      <div class="gs" id="gS">—</div>
+    </div>
+    <div class="gc">
+      <svg id="gAC" viewBox="0 0 200 110" width="100%" height="110" style="display:block;max-width:260px;margin:0 auto"></svg>
+      <div class="gv" id="gAV">—</div>
+      <div class="gl">Objetivo anual 2026</div>
+      <div class="gs" id="gAS">133.546 visitas meta</div>
+    </div>
   </div>
   <div class="card">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
@@ -184,7 +195,7 @@ tr:hover td{background:#fafaf8}
     <div class="cw sm"><canvas id="chT"></canvas></div>
   </div>
   <div class="card"><div class="ct">Cumplimiento por provincia — Objetivo vs. Real</div><div class="cs">Ordenado de peor a mejor · Barra gris = objetivo · Barra de color = real</div><div class="cw tl"><canvas id="chP"></canvas></div></div>
-  <div class="card"><div class="ct">Mix de estados por provincia</div><div class="cw"><canvas id="chM"></canvas></div></div>
+  <div class="card"><div class="ct">Mix de estados por provincia</div><div class="cs">Solo provincias con visitas en el período seleccionado · Estados del mes filtrado</div><div class="cw"><canvas id="chM"></canvas></div></div>
   <div class="card"><div class="ct">Performance detallada por provincia</div>
     <div class="tw"><table><thead><tr><th>Provincia</th><th>Real</th><th>Objetivo</th><th>% Cumpl.</th><th>Estado</th><th title="% visitas con señalización exitosa (Visita Completa + Señalizado)">Señal. OK ⓘ</th><th>Fallidos</th><th>Dup.</th></tr></thead><tbody id="tbP"></tbody></table></div>
   </div>
@@ -195,13 +206,16 @@ tr:hover td{background:#fafaf8}
 <!-- S2 COMERCIOS -->
 <div id="s2" class="slp cnt">
   <div class="kpis">
-    <div class="kpi"><div class="kl">Capilaridad MODO <small style="font-weight:400;opacity:.5;font-size:9px">(cobró alguna vez)</small></div><div class="kv" id="kCap" style="color:var(--g)">—</div><span id="kCapS" class="bg">—</span></div>
+    <div class="kpi"><div class="kl">Capilaridad MODO filtrado</div><div class="kv" id="kCap" style="color:var(--g)">—</div><span id="kCapS" class="bg">—</span></div>
+    <div class="kpi"><div class="kl">Capilaridad MODO acumulada <small style="font-weight:400;opacity:.6;font-size:9px">Ene–hoy · promedio histórico</small></div><div class="kv" id="kCapAcu" style="color:var(--g)">—</div><span id="kCapAcuS" class="bg">—</span></div>
     <div class="kpi"><div class="kl">No cobradores totales</div><div class="kv" id="kNoc">—</div><span id="kNocS" class="bo">—</span></div>
     <div class="kpi"><div class="kl">Principal motivo no cobro</div><div class="kv" id="kMot" style="font-size:16px">—</div><span id="kMotS" class="bb">—</span></div>
   </div>
-  <div class="card"><div class="ct">Capilaridad MODO por provincia <small style="font-weight:400;font-size:11px;color:var(--gy)">% comercios que cobran con MODO · menor→mayor</small></div><div id="capB"></div></div>
-  <div class="card"><div class="ct">Motivos de no cobro con MODO</div><div class="cs">Valores absolutos por motivo · Ordenado menor→mayor</div><div class="cw tl"><canvas id="chMot"></canvas></div></div>
-  <div class="card"><div class="ct">Adquirencia alternativa</div><div class="cs">QR competidores en comercios auditados · Ordenado menor→mayor</div><div class="cw"><canvas id="chQR"></canvas></div></div>
+  <div class="card"><div class="ct">% Visitas exitosas vs Capilaridad MODO por provincia</div><div class="cs">Barras = % visitas exitosas (VC + Señ. SIN REC + Señ.) · Línea punteada = % capilaridad · Filtrado por mes y provincia</div><div class="cw" style="height:200px;margin-bottom:12px"><canvas id="chCapChart"></canvas></div><div id="capB"></div></div>
+  <div class="card"><div class="ct">% Visitas exitosas y Capilaridad por mes</div><div class="cs">Barras = % visitas exitosas del mes · Línea punteada = % capilaridad ponderada · Filtrado por provincia</div><div class="cw" style="height:180px"><canvas id="chCapMes"></canvas></div></div>
+  <div class="card"><div class="ct">Distribución de motivos de no cobro por provincia</div><div class="cs">Filtrado por provincia y período seleccionados · Valores escalados al período</div><div class="cw tl"><canvas id="chMotProv"></canvas></div></div>
+  <div class="card"><div class="ct">Motivos de no cobro — total acumulado</div><div class="cs">Suma de todas las provincias filtradas · Ordenado mayor→menor</div><div class="cw"><canvas id="chMot"></canvas></div></div>
+  <div class="card"><div class="ct">Adquirencia</div><div class="cs">Tipo de adquirencia en comercios Longtail · Filtrado por provincia y período seleccionados · Ordenado mayor→menor</div><div class="cw"><canvas id="chQR"></canvas></div></div>
   <div class="sec-hdr">Insights de comercios y adopción</div>
   <div class="ig" id="comIns"></div>
 </div>
@@ -222,8 +236,6 @@ tr:hover td{background:#fafaf8}
 
 <!-- S4 INSIGHTS -->
 <div id="s4" class="slp cnt">
-  <div class="card"><div class="ct">Fallidos vs. Capilaridad por provincia</div><div class="cw"><canvas id="chI1"></canvas></div></div>
-  <div class="card"><div class="ct">Distribución de estados — acumulado</div><div class="cw"><canvas id="chI2"></canvas></div></div>
   <div class="sec-hdr">Análisis del período</div>
   <div class="ig" id="insC"></div>
   <div class="sec-hdr">Oportunidades identificadas</div>
@@ -266,8 +278,8 @@ tr:hover td{background:#fafaf8}
   <div class="pr">
     <button class="pill act" data-cf="all"      onclick="setCF('all',this)">Todas</button>
     <button class="pill"     data-cf="active"   onclick="setCF('active',this)">Activas en roadmap</button>
-    
-    
+    <button class="pill"     data-cf="out_act"  onclick="setCF('out_act',this)">Activas fuera de roadmap</button>
+    <button class="pill"     data-cf="no_act"   onclick="setCF('no_act',this)">En roadmap sin actividad</button>
   </div>
   <div class="tw"><table><thead><tr><th>Provincia</th><th>Ciudad</th><th>Estado</th><th>Situación</th><th>Real / Objetivo</th></tr></thead><tbody id="tbCity"></tbody></table></div>
   <div class="fl" id="cityC"></div>
@@ -282,7 +294,7 @@ var ML={enero:'Enero',febrero:'Febrero',marzo:'Marzo',abril:'Abril',mayo:'Mayo'}
 var PROVS=["AMBA", "Buenos Aires", "CABA", "Córdoba", "Santa Fe", "Mendoza", "Entre Ríos", "Misiones", "Tucumán", "Jujuy", "Salta", "Corrientes", "Santa Cruz"];
 var REALES={"AMBA": {"enero": 2858, "febrero": 619, "marzo": 2546, "abril": 79, "mayo": 0}, "Buenos Aires": {"enero": 1771, "febrero": 724, "marzo": 0, "abril": 0, "mayo": 0}, "CABA": {"enero": 2658, "febrero": 303, "marzo": 72, "abril": 0, "mayo": 0}, "Córdoba": {"enero": 681, "febrero": 209, "marzo": 831, "abril": 1052, "mayo": 233}, "Santa Fe": {"enero": 2328, "febrero": 954, "marzo": 971, "abril": 1499, "mayo": 402}, "Mendoza": {"enero": 405, "febrero": 190, "marzo": 553, "abril": 459, "mayo": 172}, "Entre Ríos": {"enero": 824, "febrero": 191, "marzo": 267, "abril": 0, "mayo": 0}, "Misiones": {"enero": 0, "febrero": 444, "marzo": 426, "abril": 0, "mayo": 0}, "Tucumán": {"enero": 196, "febrero": 375, "marzo": 45, "abril": 0, "mayo": 0}, "Jujuy": {"enero": 0, "febrero": 0, "marzo": 257, "abril": 0, "mayo": 0}, "Salta": {"enero": 141, "febrero": 0, "marzo": 67, "abril": 0, "mayo": 0}, "Corrientes": {"enero": 56, "febrero": 13, "marzo": 24, "abril": 0, "mayo": 0}, "Santa Cruz": {"enero": 63, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}};
 var TR={"enero": 11985, "febrero": 5676, "marzo": 6059, "abril": 3089, "mayo": 807};
-var PLANES={"AMBA": {"enero": 1200, "febrero": 1200, "marzo": 1200, "abril": 0, "mayo": 100}, "Buenos Aires": {"enero": 700, "febrero": 2200, "marzo": 3300, "abril": 0, "mayo": 0}, "CABA": {"enero": 400, "febrero": 600, "marzo": 800, "abril": 0, "mayo": 100}, "Córdoba": {"enero": 1400, "febrero": 3250, "marzo": 3800, "abril": 1134, "mayo": 2100}, "Santa Fe": {"enero": 1000, "febrero": 3350, "marzo": 3450, "abril": 1642, "mayo": 1314}, "Mendoza": {"enero": 800, "febrero": 1300, "marzo": 2100, "abril": 584, "mayo": 850}, "Entre Ríos": {"enero": 0, "febrero": 0, "marzo": 597, "abril": 0, "mayo": 0}, "Misiones": {"enero": 0, "febrero": 0, "marzo": 509, "abril": 0, "mayo": 0}, "Tucumán": {"enero": 0, "febrero": 0, "marzo": 337, "abril": 0, "mayo": 0}, "Jujuy": {"enero": 0, "febrero": 0, "marzo": 100, "abril": 0, "mayo": 0}, "Salta": {"enero": 0, "febrero": 0, "marzo": 200, "abril": 0, "mayo": 0}, "Corrientes": {"enero": 0, "febrero": 22, "marzo": 0, "abril": 0, "mayo": 0}, "Santa Cruz": {"enero": 200, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}};
+var PLANES={"Santa Fe": {"enero": 1000, "febrero": 3350, "marzo": 3930, "abril": 1165, "mayo": 1314}, "Córdoba": {"enero": 1400, "febrero": 3700, "marzo": 4800, "abril": 1600, "mayo": 2100}, "Mendoza": {"enero": 800, "febrero": 1300, "marzo": 2100, "abril": 500, "mayo": 850}, "Tucumán": {"enero": 0, "febrero": 0, "marzo": 200, "abril": 0, "mayo": 0}, "Salta": {"enero": 0, "febrero": 0, "marzo": 200, "abril": 0, "mayo": 0}, "Jujuy": {"enero": 0, "febrero": 0, "marzo": 100, "abril": 0, "mayo": 0}, "Entre Ríos": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Corrientes": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Misiones": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Chaco": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Buenos Aires": {"enero": 700, "febrero": 1200, "marzo": 1700, "abril": 0, "mayo": 0}, "CABA": {"enero": 400, "febrero": 600, "marzo": 800, "abril": 0, "mayo": 100}, "AMBA": {"enero": 800, "febrero": 1200, "marzo": 1600, "abril": 0, "mayo": 100}, "San Juan": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "San Luis": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Neuquen": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Rio Negro": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Chubut": {"enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}, "Santa Cruz": {"enero": 200, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0}};
 var TO={"enero": 5700, "febrero": 11922, "marzo": 16393, "abril": 3360, "mayo": 4464};
 var PS=[
   {Provincia:"AMBA",capilaridad:97.2,tasa_exito:91.1,tasa_fallidos:2.0,tasa_dup:2.7},
@@ -321,7 +333,7 @@ var MAP_PTS=[{"lat": -31.65013, "lng": -60.73069, "e": "Visita Completa", "p": "
 var TAR={"Visita Completa": {"enero": 10852.2, "febrero": 12037.21, "marzo": 12037.21, "abril": 12037.21, "mayo": 12037.21}, "Señalizado SIN RECAMBIO": {"enero": 9766.98, "febrero": 10833.49, "marzo": 10833.49, "abril": 10833.49, "mayo": 10833.49}, "Señalizado": {"enero": 5426.1, "febrero": 6018.6, "marzo": 6018.6, "abril": 6018.6, "mayo": 6018.6}, "Relevado": {"enero": 2170.44, "febrero": 2407.44, "marzo": 2407.44, "abril": 2407.44, "mayo": 2407.44}};
 var CIT=[{"prov": "AMBA", "ciudad": "AMBA", "ids": 5739, "plan": true}, {"prov": "Buenos Aires", "ciudad": "Mar del Plata", "ids": 2660, "plan": true}, {"prov": "Buenos Aires", "ciudad": "La Plata", "ids": 268, "plan": true}, {"prov": "Buenos Aires", "ciudad": "Bahía Blanca", "ids": 0, "plan": false}, {"prov": "Buenos Aires", "ciudad": "San Nicolás", "ids": 0, "plan": false}, {"prov": "CABA", "ciudad": "CABA", "ids": 3009, "plan": true}, {"prov": "Córdoba", "ciudad": "Córdoba Capital", "ids": 1202, "plan": true}, {"prov": "Córdoba", "ciudad": "Río Cuarto", "ids": 239, "plan": true}, {"prov": "Córdoba", "ciudad": "San Francisco", "ids": 77, "plan": true}, {"prov": "Córdoba", "ciudad": "Río Tercero", "ids": 101, "plan": true}, {"prov": "Córdoba", "ciudad": "Villa María", "ids": 0, "plan": true}, {"prov": "Santa Fe", "ciudad": "Santa Fe", "ids": 2481, "plan": true}, {"prov": "Santa Fe", "ciudad": "Rosario", "ids": 469, "plan": true}, {"prov": "Santa Fe", "ciudad": "Reconquista", "ids": 173, "plan": true}, {"prov": "Santa Fe", "ciudad": "Rafaela", "ids": 81, "plan": true}, {"prov": "Santa Fe", "ciudad": "San Jorge", "ids": 87, "plan": false}, {"prov": "Santa Fe", "ciudad": "El Trébol", "ids": 59, "plan": false}, {"prov": "Santa Fe", "ciudad": "Venado Tuerto", "ids": 0, "plan": true}, {"prov": "Mendoza", "ciudad": "Mendoza Capital", "ids": 653, "plan": true}, {"prov": "Mendoza", "ciudad": "San Rafael", "ids": 62, "plan": true}, {"prov": "Tucumán", "ciudad": "S.M. de Tucumán", "ids": 406, "plan": true}, {"prov": "Tucumán", "ciudad": "San José", "ids": 118, "plan": false}, {"prov": "Tucumán", "ciudad": "Yerba Buena", "ids": 50, "plan": false}, {"prov": "Jujuy", "ciudad": "S.S. de Jujuy", "ids": 257, "plan": true}, {"prov": "Salta", "ciudad": "Salta", "ids": 208, "plan": true}, {"prov": "Entre Ríos", "ciudad": "Paraná", "ids": 1172, "plan": true}, {"prov": "Entre Ríos", "ciudad": "Colonia Avellaneda", "ids": 54, "plan": false}, {"prov": "Entre Ríos", "ciudad": "San Benito", "ids": 40, "plan": false}, {"prov": "Corrientes", "ciudad": "Corrientes", "ids": 57, "plan": true}, {"prov": "Corrientes", "ciudad": "Goya", "ids": 0, "plan": false}, {"prov": "Misiones", "ciudad": "Posadas", "ids": 699, "plan": true}, {"prov": "Misiones", "ciudad": "Garupá", "ids": 90, "plan": false}, {"prov": "Santa Cruz", "ciudad": "Río Gallegos", "ids": 53, "plan": true}];
 
-var CITY_PLANES={"Santa Fe___Santa Fe": {"prov": "Santa Fe", "ciudad": "Santa Fe", "enero": 827, "febrero": 827, "marzo": 827, "abril": 217, "mayo": 94, "junio": 450}, "Santa Fe___Rosario": {"prov": "Santa Fe", "ciudad": "Rosario", "enero": 33, "febrero": 218, "marzo": 218, "abril": 1373, "mayo": 600, "junio": 700}, "Santa Fe___Reconquista": {"prov": "Santa Fe", "ciudad": "Reconquista", "enero": 0, "febrero": 72, "marzo": 101, "abril": 0, "mayo": 150, "junio": 100}, "Santa Fe___Rafaela": {"prov": "Santa Fe", "ciudad": "Rafaela", "enero": 0, "febrero": 40, "marzo": 41, "abril": 52, "mayo": 150, "junio": 100}, "Santa Fe___Venado Tuerto": {"prov": "Santa Fe", "ciudad": "Venado Tuerto", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 100, "junio": 50}, "Santa Fe___San Lorenzo": {"prov": "Santa Fe", "ciudad": "San Lorenzo", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 80, "junio": 50}, "Santa Fe___Villa Constitución": {"prov": "Santa Fe", "ciudad": "Villa Constitución", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 60, "junio": 50}, "Santa Fe___Esperanza": {"prov": "Santa Fe", "ciudad": "Esperanza", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 80, "junio": 50}, "Córdoba___Córdoba Capital": {"prov": "Córdoba", "ciudad": "Córdoba Capital", "enero": 285, "febrero": 407, "marzo": 510, "abril": 964, "mayo": 1000, "junio": 1000}, "Córdoba___Río Cuarto": {"prov": "Córdoba", "ciudad": "Río Cuarto", "enero": 0, "febrero": 112, "marzo": 127, "abril": 170, "mayo": 300, "junio": 350}, "Córdoba___Villa María": {"prov": "Córdoba", "ciudad": "Villa María", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 200, "junio": 100}, "Córdoba___Villa Gral. Belgrano": {"prov": "Córdoba", "ciudad": "Villa Gral. Belgrano", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___Mina Clavero": {"prov": "Córdoba", "ciudad": "Mina Clavero", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___San Francisco": {"prov": "Córdoba", "ciudad": "San Francisco", "enero": 0, "febrero": 0, "marzo": 77, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___Villa Carlos Paz": {"prov": "Córdoba", "ciudad": "Villa Carlos Paz", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___Río Tercero": {"prov": "Córdoba", "ciudad": "Río Tercero", "enero": 0, "febrero": 39, "marzo": 62, "abril": 0, "mayo": 200, "junio": 50}, "Mendoza___Mendoza Capital": {"prov": "Mendoza", "ciudad": "Mendoza Capital", "enero": 158, "febrero": 198, "marzo": 297, "abril": 584, "mayo": 600, "junio": 500}, "Mendoza___San Rafael": {"prov": "Mendoza", "ciudad": "San Rafael", "enero": 0, "febrero": 21, "marzo": 41, "abril": 0, "mayo": 250, "junio": 150}, "Tucumán___S.M. de Tucumán": {"prov": "Tucumán", "ciudad": "S.M. de Tucumán", "enero": 0, "febrero": 0, "marzo": 406, "abril": 0, "mayo": 0, "junio": 0}, "Salta___Salta": {"prov": "Salta", "ciudad": "Salta", "enero": 0, "febrero": 0, "marzo": 141, "abril": 0, "mayo": 0, "junio": 0}, "Jujuy___S.S. de Jujuy": {"prov": "Jujuy", "ciudad": "S.S. de Jujuy", "enero": 0, "febrero": 0, "marzo": 203, "abril": 0, "mayo": 0, "junio": 0}, "Entre Ríos___Paraná": {"prov": "Entre Ríos", "ciudad": "Paraná", "enero": 0, "febrero": 0, "marzo": 1172, "abril": 0, "mayo": 0, "junio": 0}, "Entre Ríos___Concordia": {"prov": "Entre Ríos", "ciudad": "Concordia", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Corrientes___Corrientes": {"prov": "Corrientes", "ciudad": "Corrientes", "enero": 0, "febrero": 0, "marzo": 57, "abril": 0, "mayo": 0, "junio": 0}, "Corrientes___Goya": {"prov": "Corrientes", "ciudad": "Goya", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Corrientes___Mercedes": {"prov": "Corrientes", "ciudad": "Mercedes", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Misiones___Posadas": {"prov": "Misiones", "ciudad": "Posadas", "enero": 0, "febrero": 0, "marzo": 699, "abril": 0, "mayo": 0, "junio": 0}, "Chaco___Resistencia": {"prov": "Chaco", "ciudad": "Resistencia", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Mar del Plata": {"prov": "Buenos Aires", "ciudad": "Mar del Plata", "enero": 443, "febrero": 887, "marzo": 1330, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___La Plata": {"prov": "Buenos Aires", "ciudad": "La Plata", "enero": 89, "febrero": 89, "marzo": 90, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Bahía Blanca": {"prov": "Buenos Aires", "ciudad": "Bahía Blanca", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___San Nicolás": {"prov": "Buenos Aires", "ciudad": "San Nicolás", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Pergamino": {"prov": "Buenos Aires", "ciudad": "Pergamino", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Tandil": {"prov": "Buenos Aires", "ciudad": "Tandil", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Olavarría": {"prov": "Buenos Aires", "ciudad": "Olavarría", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Junín": {"prov": "Buenos Aires", "ciudad": "Junín", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Zárate / Campana": {"prov": "Buenos Aires", "ciudad": "Zárate / Campana", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Necochea": {"prov": "Buenos Aires", "ciudad": "Necochea", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Luján / Pilar": {"prov": "Buenos Aires", "ciudad": "Luján / Pilar", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "CABA___CABA": {"prov": "CABA", "ciudad": "CABA", "enero": 648, "febrero": 973, "marzo": 1297, "abril": 0, "mayo": 100, "junio": 100}, "AMBA___AMBA": {"prov": "AMBA", "ciudad": "AMBA", "enero": 1110, "febrero": 1665, "marzo": 2219, "abril": 0, "mayo": 100, "junio": 100}, "San Juan___San Juan": {"prov": "San Juan", "ciudad": "San Juan", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "San Luis___San Luis": {"prov": "San Luis", "ciudad": "San Luis", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Neuquen___Neuquén": {"prov": "Neuquen", "ciudad": "Neuquén", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Rio Negro___Bariloche": {"prov": "Rio Negro", "ciudad": "Bariloche", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Rio Negro___Gral. Roca": {"prov": "Rio Negro", "ciudad": "Gral. Roca", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Rio Negro___Viedma": {"prov": "Rio Negro", "ciudad": "Viedma", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Chubut___Trelew": {"prov": "Chubut", "ciudad": "Trelew", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Chubut___Rawson": {"prov": "Chubut", "ciudad": "Rawson", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Santa Cruz___Río Gallegos": {"prov": "Santa Cruz", "ciudad": "Río Gallegos", "enero": 53, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}};
+var CITY_PLANES={"Santa Fe___Santa Fe": {"prov": "Santa Fe", "ciudad": "Santa Fe", "enero": 700, "febrero": 700, "marzo": 700, "abril": 100, "mayo": 94, "junio": 450}, "Santa Fe___Rosario": {"prov": "Santa Fe", "ciudad": "Rosario", "enero": 300, "febrero": 2000, "marzo": 2000, "abril": 900, "mayo": 600, "junio": 700}, "Santa Fe___Reconquista": {"prov": "Santa Fe", "ciudad": "Reconquista", "enero": 0, "febrero": 250, "marzo": 350, "abril": 15, "mayo": 150, "junio": 100}, "Santa Fe___Rafaela": {"prov": "Santa Fe", "ciudad": "Rafaela", "enero": 0, "febrero": 240, "marzo": 240, "abril": 150, "mayo": 150, "junio": 100}, "Santa Fe___Venado Tuerto": {"prov": "Santa Fe", "ciudad": "Venado Tuerto", "enero": 0, "febrero": 160, "marzo": 160, "abril": 0, "mayo": 100, "junio": 50}, "Santa Fe___San Lorenzo": {"prov": "Santa Fe", "ciudad": "San Lorenzo", "enero": 0, "febrero": 0, "marzo": 200, "abril": 0, "mayo": 80, "junio": 50}, "Santa Fe___Villa Constitución": {"prov": "Santa Fe", "ciudad": "Villa Constitución", "enero": 0, "febrero": 0, "marzo": 120, "abril": 0, "mayo": 60, "junio": 50}, "Santa Fe___Esperanza": {"prov": "Santa Fe", "ciudad": "Esperanza", "enero": 0, "febrero": 0, "marzo": 160, "abril": 0, "mayo": 80, "junio": 50}, "Córdoba___Córdoba Capital": {"prov": "Córdoba", "ciudad": "Córdoba Capital", "enero": 0, "febrero": 700, "marzo": 800, "abril": 1200, "mayo": 1000, "junio": 1000}, "Córdoba___Río Cuarto": {"prov": "Córdoba", "ciudad": "Río Cuarto", "enero": 1400, "febrero": 2000, "marzo": 2500, "abril": 400, "mayo": 300, "junio": 350}, "Córdoba___Villa María": {"prov": "Córdoba", "ciudad": "Villa María", "enero": 0, "febrero": 350, "marzo": 500, "abril": 0, "mayo": 200, "junio": 100}, "Córdoba___Villa Gral. Belgrano": {"prov": "Córdoba", "ciudad": "Villa Gral. Belgrano", "enero": 0, "febrero": 200, "marzo": 300, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___Mina Clavero": {"prov": "Córdoba", "ciudad": "Mina Clavero", "enero": 0, "febrero": 200, "marzo": 300, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___San Francisco": {"prov": "Córdoba", "ciudad": "San Francisco", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___Villa Carlos Paz": {"prov": "Córdoba", "ciudad": "Villa Carlos Paz", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 100, "junio": 50}, "Córdoba___Río Tercero": {"prov": "Córdoba", "ciudad": "Río Tercero", "enero": 0, "febrero": 250, "marzo": 400, "abril": 0, "mayo": 200, "junio": 50}, "Mendoza___Mendoza Capital": {"prov": "Mendoza", "ciudad": "Mendoza Capital", "enero": 0, "febrero": 300, "marzo": 600, "abril": 500, "mayo": 600, "junio": 500}, "Mendoza___San Rafael": {"prov": "Mendoza", "ciudad": "San Rafael", "enero": 800, "febrero": 1000, "marzo": 1500, "abril": 0, "mayo": 250, "junio": 150}, "Tucumán___S.M. de Tucumán": {"prov": "Tucumán", "ciudad": "S.M. de Tucumán", "enero": 0, "febrero": 0, "marzo": 200, "abril": 0, "mayo": 0, "junio": 0}, "Salta___Salta": {"prov": "Salta", "ciudad": "Salta", "enero": 0, "febrero": 0, "marzo": 200, "abril": 0, "mayo": 0, "junio": 0}, "Jujuy___S.S. de Jujuy": {"prov": "Jujuy", "ciudad": "S.S. de Jujuy", "enero": 0, "febrero": 0, "marzo": 100, "abril": 0, "mayo": 0, "junio": 0}, "Entre Ríos___Paraná": {"prov": "Entre Ríos", "ciudad": "Paraná", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Entre Ríos___Concordia": {"prov": "Entre Ríos", "ciudad": "Concordia", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Corrientes___Corrientes": {"prov": "Corrientes", "ciudad": "Corrientes", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Corrientes___Goya": {"prov": "Corrientes", "ciudad": "Goya", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Corrientes___Mercedes": {"prov": "Corrientes", "ciudad": "Mercedes", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Misiones___Posadas": {"prov": "Misiones", "ciudad": "Posadas", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Chaco___Resistencia": {"prov": "Chaco", "ciudad": "Resistencia", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Mar del Plata": {"prov": "Buenos Aires", "ciudad": "Mar del Plata", "enero": 500, "febrero": 1000, "marzo": 1500, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___La Plata": {"prov": "Buenos Aires", "ciudad": "La Plata", "enero": 200, "febrero": 200, "marzo": 200, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Bahía Blanca": {"prov": "Buenos Aires", "ciudad": "Bahía Blanca", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___San Nicolás": {"prov": "Buenos Aires", "ciudad": "San Nicolás", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Pergamino": {"prov": "Buenos Aires", "ciudad": "Pergamino", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Tandil": {"prov": "Buenos Aires", "ciudad": "Tandil", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Olavarría": {"prov": "Buenos Aires", "ciudad": "Olavarría", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Junín": {"prov": "Buenos Aires", "ciudad": "Junín", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Zárate / Campana": {"prov": "Buenos Aires", "ciudad": "Zárate / Campana", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Necochea": {"prov": "Buenos Aires", "ciudad": "Necochea", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Buenos Aires___Luján / Pilar": {"prov": "Buenos Aires", "ciudad": "Luján / Pilar", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "CABA___CABA": {"prov": "CABA", "ciudad": "CABA", "enero": 400, "febrero": 600, "marzo": 800, "abril": 0, "mayo": 100, "junio": 100}, "AMBA___AMBA": {"prov": "AMBA", "ciudad": "AMBA", "enero": 800, "febrero": 1200, "marzo": 1600, "abril": 0, "mayo": 100, "junio": 100}, "San Juan___San Juan": {"prov": "San Juan", "ciudad": "San Juan", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "San Luis___San Luis": {"prov": "San Luis", "ciudad": "San Luis", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Neuquen___Neuquén": {"prov": "Neuquen", "ciudad": "Neuquén", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Rio Negro___Bariloche": {"prov": "Rio Negro", "ciudad": "Bariloche", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Rio Negro___Gral. Roca": {"prov": "Rio Negro", "ciudad": "Gral. Roca", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Rio Negro___Viedma": {"prov": "Rio Negro", "ciudad": "Viedma", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Chubut___Trelew": {"prov": "Chubut", "ciudad": "Trelew", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Chubut___Rawson": {"prov": "Chubut", "ciudad": "Rawson", "enero": 0, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}, "Santa Cruz___Río Gallegos": {"prov": "Santa Cruz", "ciudad": "Río Gallegos", "enero": 200, "febrero": 0, "marzo": 0, "abril": 0, "mayo": 0, "junio": 0}};
 var EC={'Visita Completa':'#008859','Señalizado SIN RECAMBIO':'#3CAB6D','Señalizado':'#2375FF','Relevado':'#FFC738','Revisar':'#0049C4','Fallido':'#FF5424','Mal señalizados':'#FF8C00','Duplicado':'#aaa'};
 var OBJ_ANUAL=133546, FIN_PW="Modo@Q1$2026";
 
@@ -391,6 +403,78 @@ function tM(m,btn){
 function setTM(m){tMode=m;document.getElementById('tAbs').classList.toggle('act',m==='abs');document.getElementById('tPct').classList.toggle('act',m==='pct');s1Charts();}
 
 // ═══ TAB ═════════════════════════════════════════════════════════
+function buildMix(){
+  // LÓGICA: para cada provincia en el período seleccionado,
+  // el total de visitas = REALES[p][mes] (fuente exacta).
+  // La distribución por estado se calcula con las proporciones
+  // de MAP_PTS filtrado por mes+provincia, escaladas al total real.
+  // Si MAP_PTS no tiene muestra para ese período, se usan las
+  // proporciones globales de EP escaladas al real del período.
+
+  var allProvs = gP();
+
+  // Solo provincias con visitas reales en el período seleccionado
+  var activeProvs = allProvs.filter(function(p){
+    return sM.reduce(function(a,m){return a+((REALES[p]||{})[m]||0);},0) > 0;
+  });
+
+  // Ordenar por total de visitas desc, cap 10
+  activeProvs.sort(function(a,b){
+    var ta=sM.reduce(function(x,m){return x+((REALES[a]||{})[m]||0);},0);
+    var tb=sM.reduce(function(x,m){return x+((REALES[b]||{})[m]||0);},0);
+    return tb-ta;
+  });
+  var provs = activeProvs.slice(0,10);
+
+  // Contar proporciones de MAP_PTS para el período filtrado
+  var sampCnt = {}; // {prov: {estado: n}}
+  var sampTot = {}; // {prov: n}
+  for(var i=0;i<MAP_PTS.length;i++){
+    var pt=MAP_PTS[i];
+    if(!pt.e||!pt.p) continue;
+    if(sP.length&&sP.indexOf(pt.p)<0) continue;
+    if(sM.indexOf(pt.m||'')<0) continue;
+    if(!sampCnt[pt.p]) sampCnt[pt.p]={};
+    sampCnt[pt.p][pt.e]=(sampCnt[pt.p][pt.e]||0)+1;
+    sampTot[pt.p]=(sampTot[pt.p]||0)+1;
+  }
+
+  var ests=['Visita Completa','Señalizado SIN RECAMBIO','Señalizado','Relevado','Fallido','Mal señalizados','Duplicado'];
+  var cols=['#008859','#3CAB6D','#2375FF','#FFC738','#FF5424','#FF8C00','#aaa'];
+
+  // Para cada provincia: escalar proporciones al total real del período
+  var data={};
+  provs.forEach(function(p){
+    data[p]={};
+    var realTotal=sM.reduce(function(a,m){return a+((REALES[p]||{})[m]||0);},0);
+    var st=sampTot[p]||0;
+    if(st>0){
+      // Proporciones de MAP_PTS escaladas al real del período
+      ests.forEach(function(e){
+        data[p][e]=Math.round(realTotal*((sampCnt[p]||{})[e]||0)/st);
+      });
+    } else {
+      // Sin muestra MAP_PTS para este período → proporciones globales EP
+      var epTot=Object.values(EP[p]||{}).reduce(function(a,b){return a+b;},0);
+      ests.forEach(function(e){
+        data[p][e]=epTot>0?Math.round(realTotal*((EP[p]||{})[e]||0)/epTot):0;
+      });
+    }
+  });
+
+  mkCh('chM',{type:'bar',data:{
+    labels:provs.map(function(p){return p.length>8?p.slice(0,7)+'\u2026':p;}),
+    datasets:ests.map(function(e,i){return{label:e,data:provs.map(function(p){return data[p][e]||0;}),backgroundColor:cols[i],borderRadius:3};})
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{mode:'index',intersect:false,callbacks:{
+      footer:function(items){
+        var tot=items.reduce(function(a,it){return a+it.parsed.y;},0);
+        return 'Total: '+tot.toLocaleString('es-AR')+' visitas';
+      }
+    }}},
+    scales:{x:{stacked:true,ticks:{font:{size:8}}},y:{stacked:true,ticks:{font:{size:9}}}}}});
+}
+
 function goTab(id,btn){
   document.querySelectorAll('.slp').forEach(function(s){s.classList.remove('act');});
   document.querySelectorAll('.tab').forEach(function(t){t.classList.remove('act');});
@@ -400,7 +484,7 @@ function goTab(id,btn){
     if(id==='s1')s1Charts();
     else if(id==='s2')s2Charts();
     else if(id==='s3'){initMap();filterMap();}
-    else if(id==='s4')s4Charts();
+    else if(id==='s4'){s4Charts();}
     else if(id==='s5'&&finOK)finCharts();
     else if(id==='s6')rCities();
   },80);
@@ -408,12 +492,22 @@ function goTab(id,btn){
 
 // ═══ GAUGES ══════════════════════════════════════════════════════
 function drawG(id,p,col){
-  var c=document.getElementById(id);if(!c)return;
-  c.width=c.parentElement.clientWidth||200;c.height=80;
-  var ctx=c.getContext('2d'),cx=c.width/2,cy=72,r=Math.min(c.width*0.38,60);
-  ctx.clearRect(0,0,c.width,c.height);
-  ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,2*Math.PI);ctx.strokeStyle='#eee';ctx.lineWidth=10;ctx.lineCap='round';ctx.stroke();
-  if(p>0){ctx.beginPath();ctx.arc(cx,cy,r,Math.PI,Math.PI+Math.PI*Math.min(p,130)/100);ctx.strokeStyle=col;ctx.lineWidth=10;ctx.lineCap='round';ctx.stroke();}
+  var svg=document.getElementById(id);if(!svg)return;
+  var cx=100,cy=95,r=70,sw=12;
+  // Convert % to angle: 0%=180deg, 100%=360deg (semicircle)
+  var pct=Math.min(Math.max(p,0),130);
+  var startA=Math.PI; // 180deg = left
+  var endA=Math.PI+Math.PI*(pct/100);
+  function polar(a){return {x:cx+r*Math.cos(a),y:cy+r*Math.sin(a)};}
+  var s=polar(startA),e=polar(Math.min(endA,2*Math.PI));
+  var largeArc=pct>100?1:0;
+  // Background track
+  var bgPath='M '+polar(Math.PI).x+' '+polar(Math.PI).y+' A '+r+' '+r+' 0 0 1 '+polar(2*Math.PI).x+' '+polar(2*Math.PI).y;
+  // Value arc
+  var valPath=pct>0?'M '+s.x+' '+s.y+' A '+r+' '+r+' 0 '+largeArc+' 1 '+e.x+' '+e.y:'';
+  svg.innerHTML=
+    '<path d="'+bgPath+'" fill="none" stroke="#eee" stroke-width="'+sw+'" stroke-linecap="round"/>'+
+    (pct>0?'<path d="'+valPath+'" fill="none" stroke="'+col+'" stroke-width="'+sw+'" stroke-linecap="round"/>':'');
 }
 function buildGauges(){
   var r=gR('TOTAL',null),o=gO('TOTAL',null),p=pct(r,o)||0,col=pCol(p);
@@ -447,6 +541,30 @@ function buildKPIs(){
 }
 
 // ═══ S1 CHARTS ═══════════════════════════════════════════════════
+
+// ── FILTERED ESTADOS from MAP_PTS sample (respects month + province filter) ──
+function getFilteredEstados(){
+  var result={};
+  for(var i=0;i<MAP_PTS.length;i++){
+    var pt=MAP_PTS[i];
+    if(!pt.e||!pt.p) continue;
+    if(sP.length&&sP.indexOf(pt.p)<0) continue;
+    if(sM.length!==MESES.length&&sM.indexOf(pt.m||'')<0) continue;
+    if(!result[pt.p])result[pt.p]={};
+    result[pt.p][pt.e]=(result[pt.p][pt.e]||0)+1;
+  }
+  return result;
+}
+function getFilteredEstadosTotals(){
+  var fe=getFilteredEstados(),totals={};
+  Object.keys(fe).forEach(function(p){
+    Object.keys(fe[p]).forEach(function(e){
+      totals[e]=(totals[e]||0)+fe[p][e];
+    });
+  });
+  return totals;
+}
+
 function s1Charts(){
   buildKPIs();buildGauges();
   var provs=gP();
@@ -457,9 +575,8 @@ function s1Charts(){
     {label:'Objetivo',data:rows.map(function(r){return r.o;}),backgroundColor:'rgba(0,0,0,.1)',borderRadius:4,order:2},
     {label:'Real',data:rows.map(function(r){return r.r;}),backgroundColor:rows.map(function(r){return pCol(r.pc);}),borderRadius:4,order:1}
   ]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{family:'Quicksand'},boxWidth:10}},tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.x.toLocaleString('es-AR');}}}},scales:{x:{beginAtZero:true,ticks:{callback:function(v){return v.toLocaleString('es-AR');},font:{size:9}}},y:{ticks:{font:{size:10}}}}}});
-  // Mix
-  var ests=['Visita Completa','Señalizado SIN RECAMBIO','Señalizado','Relevado','Fallido','Duplicado'];
-  mkCh('chM',{type:'bar',data:{labels:provs.slice(0,10).map(function(p){return p.length>8?p.slice(0,7)+'…':p;}),datasets:ests.map(function(e){return {label:e,data:provs.slice(0,10).map(function(p){return EP[p]?(EP[p][e]||0):0;}),backgroundColor:EC[e]||'#ccc',borderRadius:3};})},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{stacked:true,ticks:{font:{size:8}}},y:{stacked:true,ticks:{font:{size:9}}}}}});
+  // Mix — uses buildMix for month-filtered, province-active data
+  buildMix();
   // Trend
   var ls=MESES.map(function(m){return ML[m]||m;});
   var rD=MESES.map(function(m){return gP().reduce(function(a,p){return a+((REALES[p]||{})[m]||0);},0);});
@@ -473,13 +590,26 @@ function s1Charts(){
   }
   // Table
   var tb=document.getElementById('tbP');if(!tb)return;
+    // Use MAP_PTS filtered data for detailed stats per province (señal%, fallidos%, dup%)
+  var feMap=getFilteredEstados();
   tb.innerHTML=rows.map(function(r){
-    var e=EP[r.p]||{};var tot=Math.max(r.r,1);
-    var ok=(e['Visita Completa']||0)+(e['Señalizado SIN RECAMBIO']||0)+(e['Señalizado']||0);
+    var eMap=feMap[r.p]||{};
+    var eTot=Object.values(eMap).reduce(function(a,b){return a+b;},0);
+    // When MAP_PTS has data for this period: use it (correct monthly breakdown)
+    // When no MAP_PTS data: use EP with EP total as denominator (global rate, not monthly r.r)
+    var eData=eTot>0?eMap:(EP[r.p]||{});
+    var epTot=Object.values(EP[r.p]||{}).reduce(function(a,b){return a+b;},0);
+    var tot=eTot>0?eTot:Math.max(epTot,r.r,1);
+    var ok=(eData['Visita Completa']||0)+(eData['Señalizado SIN RECAMBIO']||0)+(eData['Señalizado']||0);
+    var fall=(eData['Fallido']||0)+(eData['Mal señalizados']||0);
+    var dup=(eData['Duplicado']||0);
+    var pctOk=tot>0?Math.round(ok/tot*100):0;
+    var pctFall=tot>0?Math.round(fall/tot*100):0;
+    var pctDup=tot>0?Math.round(dup/tot*100):0;
     var w=Math.min(Math.max(r.pc||0,0),105);
     return '<tr><td style="font-weight:600">'+r.p+'</td><td>'+fN(r.r)+'</td><td>'+(r.o?fN(r.o):'—')+'</td>'+
       '<td><div class="bw"><div class="bb2"><div class="bf" style="width:'+w+'%;background:'+pCol(r.pc)+'"></div></div>'+fP(r.pc)+'</div></td>'+
-      '<td>'+pBadge(r.pc)+'</td><td>'+Math.round((e['Visita Completa']||0)/tot*100)+'%</td><td>'+Math.round((e['Fallido']||0)/tot*100)+'%</td><td>'+Math.round((e['Duplicado']||0)/tot*100)+'%</td></tr>';
+      '<td>'+pBadge(r.pc)+'</td><td>'+pctOk+'%</td><td>'+pctFall+'%</td><td>'+pctDup+'%</td></tr>';
   }).join('')+'<tr class="tot"><td>TOTAL</td><td>'+fN(gR('TOTAL',null))+'</td><td>'+fN(gO('TOTAL',null))+'</td><td>'+fP(pct(gR('TOTAL',null),gO('TOTAL',null)))+'</td><td></td><td></td><td></td><td></td></tr>';
   // Hallazgos
   var hd=document.getElementById('hall');if(!hd)return;
@@ -498,44 +628,192 @@ function s1Charts(){
 
 // ═══ S2 CHARTS ═══════════════════════════════════════════════════
 function s2Charts(){
-  var provs=gP(),fS=PS.filter(function(s){return !sP.length||sP.indexOf(s.Provincia)>=0;});
-  var capP=fS.reduce(function(a,s){return a+s.capilaridad;},0)/Math.max(fS.length,1);
+  // ── Provincias activas en el período ──
+  var allProvs=sP.length?sP:PROVS;
+  var provsWithActivity=allProvs.filter(function(p){
+    return sM.some(function(m){return ((REALES[p]||{})[m]||0)>0;});
+  });
+  if(provsWithActivity.length===0) provsWithActivity=allProvs;
+
+  var fS=PS.filter(function(s){return provsWithActivity.indexOf(s.Provincia)>=0;});
+
+  // ── Capilaridad filtrada (ponderada por visitas reales del período) ──
+  var capNum=0,capDen=0;
+  fS.forEach(function(s){
+    var v=sM.reduce(function(a,m){return a+((REALES[s.Provincia]||{})[m]||0);},0);
+    capNum+=s.capilaridad*v; capDen+=v;
+  });
+  var capP=capDen>0?Math.round(capNum/capDen):Math.round(fS.reduce(function(a,s){return a+s.capilaridad;},0)/Math.max(fS.length,1));
+
+  // ── Capilaridad acumulada histórica (Ene–hoy, todas las provincias) ──
+  var capAcuNum=0,capAcuDen=0;
+  PS.forEach(function(s){
+    var v=MESES.reduce(function(a,m){return a+((REALES[s.Provincia]||{})[m]||0);},0);
+    capAcuNum+=s.capilaridad*v; capAcuDen+=v;
+  });
+  var capAcu=capAcuDen>0?Math.round(capAcuNum/capAcuDen):Math.round(PS.reduce(function(a,s){return a+s.capilaridad;},0)/Math.max(PS.length,1));
+
   var r=gR('TOTAL',null);
-  document.getElementById('kCap').textContent=Math.round(capP)+'%';
-  document.getElementById('kCapS').textContent=capP>=60?'En desarrollo':capP>=30?'En crecimiento':'Crítica';
-  document.getElementById('kCapS').className=capP>=60?'bg':capP>=30?'by':'br';
+
+  // KPIs
+  document.getElementById('kCap').textContent=capP+'%';
+  document.getElementById('kCap').style.color=capP>=60?'var(--g)':capP>=30?'#FFC738':'#FF5424';
+  var capBadge=capP>=80?'Saludable':capP>=60?'En desarrollo':capP>=30?'En crecimiento':'Crítica';
+  var capClass=capP>=60?'bg':capP>=30?'by':'br';
+  document.getElementById('kCapS').textContent=capBadge;
+  document.getElementById('kCapS').className=capClass;
+
+  document.getElementById('kCapAcu').textContent=capAcu+'%';
+  document.getElementById('kCapAcu').style.color=capAcu>=60?'var(--g)':capAcu>=30?'#FFC738':'#FF5424';
+  var capAcuBadge=capAcu>=80?'Saludable':capAcu>=60?'En desarrollo':capAcu>=30?'En crecimiento':'Crítica';
+  document.getElementById('kCapAcuS').textContent=capAcuBadge+' · histórico';
+  document.getElementById('kCapAcuS').className=capAcu>=60?'bg':capAcu>=30?'by':'br';
+
   document.getElementById('kNoc').textContent=fN(r*(1-capP/100));
   document.getElementById('kNocS').textContent=Math.round(100-capP)+'% no cobran';
-  var mT={};MK.forEach(function(k){mT[k]=0;});provs.forEach(function(p){var md=MOT[p]||{};MK.forEach(function(k){mT[k]=(mT[k]||0)+(md[k]||0);});});
-  var top=MK.reduce(function(a,b){return (mT[a]||0)>=(mT[b]||0)?a:b;},MK[0]);
+
+  // ── Motivos escalados al período ──
+  var scaledMot={};
+  provsWithActivity.forEach(function(p){
+    var realTot=MESES.reduce(function(a,m){return a+((REALES[p]||{})[m]||0);},0);
+    var realPeriod=sM.reduce(function(a,m){return a+((REALES[p]||{})[m]||0);},0);
+    var scale=realTot>0?realPeriod/realTot:1;
+    scaledMot[p]={};
+    MK.forEach(function(k){scaledMot[p][k]=Math.round(((MOT[p]||{})[k]||0)*scale);});
+  });
+  var mT={};MK.forEach(function(k){mT[k]=0;});
+  provsWithActivity.forEach(function(p){MK.forEach(function(k){mT[k]+=(scaledMot[p]||{})[k]||0;});});
+  var top=MK.reduce(function(a,b){return mT[a]>=mT[b]?a:b;},MK[0]);
   var totNC=Object.values(mT).reduce(function(a,b){return a+b;},0);
   document.getElementById('kMot').textContent=top;
   document.getElementById('kMotS').textContent=totNC>0?Math.round((mT[top]||0)/totNC*100)+'% de no-cobros':'—';
-  // Cap bars ASC
+
+  // ── Capilaridad por provincia: % éxito (barras) vs % capilaridad (línea) ──
+  var exitoStates=['Visita Completa','Señalizado SIN RECAMBIO','Señalizado'];
   var sorted=[].concat(fS).sort(function(a,b){return a.capilaridad-b.capilaridad;});
+  var capLabels=sorted.map(function(s){return s.Provincia;});
+
+  // % éxito por provincia: proporciones MAP_PTS filtradas por mes+provincia
+  var exitoPct=sorted.map(function(s){
+    var sampTot=0,sampEx=0;
+    MAP_PTS.forEach(function(pt){
+      if(pt.p!==s.Provincia) return;
+      if(sM.indexOf(pt.m||'')<0) return;
+      sampTot++;
+      if(exitoStates.indexOf(pt.e)>=0) sampEx++;
+    });
+    if(sampTot>0) return Math.round(sampEx/sampTot*100);
+    // Fallback EP global
+    var epTot=Object.values(EP[s.Provincia]||{}).reduce(function(a,b){return a+b;},0);
+    var epEx=exitoStates.reduce(function(a,e){return a+((EP[s.Provincia]||{})[e]||0);},0);
+    return epTot>0?Math.round(epEx/epTot*100):0;
+  });
+
+  mkCh('chCapChart',{type:'bar',data:{
+    labels:capLabels,
+    datasets:[
+      {label:'% Visitas exitosas',data:exitoPct,
+       backgroundColor:exitoPct.map(function(v){return v>=80?'rgba(0,136,89,0.85)':v>=60?'rgba(255,199,56,0.85)':'rgba(255,84,36,0.85)';}),
+       borderRadius:6,order:2},
+      {label:'% Capilaridad MODO',data:sorted.map(function(s){return s.capilaridad;}),
+       type:'line',borderColor:'#FFC738',borderWidth:2.5,
+       borderDash:[6,3],pointBackgroundColor:'#FFC738',pointRadius:5,fill:false,order:1}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{font:{family:'Quicksand'},boxWidth:10}}},
+    scales:{y:{max:100,min:0,ticks:{callback:function(v){return v+'%';},font:{size:9}}}}}});
+
   document.getElementById('capB').innerHTML=sorted.map(function(s){
     var w=Math.round(s.capilaridad),col=s.capilaridad>=60?'var(--g)':s.capilaridad>=30?'#FFC738':'#FF5424';
-    var lbl=s.capilaridad>=60?'<span style="font-size:10px;font-family:var(--f2);color:var(--g);font-weight:700;margin-left:8px">✅ OK</span>':s.capilaridad>=30?'<span style="font-size:10px;font-family:var(--f2);color:#8a5c00;font-weight:700;margin-left:8px">⚠ Mejorar</span>':'<span style="font-size:10px;font-family:var(--f2);color:var(--o);font-weight:700;margin-left:8px">⛔ Crítica</span>';
+    var lbl=s.capilaridad>=60?'<span style="font-size:10px;font-family:var(--f2);color:var(--g);font-weight:700;margin-left:8px">\u2705 Saludable</span>':s.capilaridad>=30?'<span style="font-size:10px;font-family:var(--f2);color:#8a5c00;font-weight:700;margin-left:8px">\u26a0 En crecimiento</span>':'<span style="font-size:10px;font-family:var(--f2);color:var(--o);font-weight:700;margin-left:8px">\u26d4 Cr\u00edtica</span>';
     return '<div class="cr2"><div class="cl">'+s.Provincia+'</div><div class="ck"><div class="cf" style="width:'+w+'%;background:'+col+'">'+w+'%</div></div>'+lbl+'</div>';
   }).join('');
-  // Motivos ASC
-  var mP=MK.map(function(k){return {k:k,v:mT[k]||0};}).sort(function(a,b){return a.v-b.v;});
-  mkCh('chMot',{type:'bar',data:{labels:mP.map(function(x){return x.k;}),datasets:[{data:mP.map(function(x){return x.v;}),backgroundColor:'#FF5424',borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:10}}}}}});
-  // QR ASC
-  var qP=QR.labels.map(function(l,i){return {l:l,v:QR.values[i]||0};}).sort(function(a,b){return a.v-b.v;});
-  mkCh('chQR',{type:'bar',data:{labels:qP.map(function(x){return x.l;}),datasets:[{data:qP.map(function(x){return x.v;}),backgroundColor:['#aaa','#16A085','#F39C12','#E67E22','#27AE60','#2980B9','#8E44AD','#C0392B'],borderRadius:6}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:10}}}}}});
-  // Insights comercios
+
+  // ── Capilaridad por mes: % éxito (barras) vs % capilaridad ponderada (línea) ──
+  var monthData=MESES.map(function(m){
+    var sampTot=0,sampEx=0;
+    provsWithActivity.forEach(function(p){
+      MAP_PTS.forEach(function(pt){
+        if(pt.p!==p||pt.m!==m) return;
+        sampTot++;
+        if(exitoStates.indexOf(pt.e)>=0) sampEx++;
+      });
+    });
+    var exitoM=sampTot>0?Math.round(sampEx/sampTot*100):0;
+    var capN=0,capD=0;
+    provsWithActivity.forEach(function(p){
+      var v=(REALES[p]||{})[m]||0;
+      var ps=PS.find(function(s){return s.Provincia===p;});
+      if(ps&&v>0){capN+=ps.capilaridad*v;capD+=v;}
+    });
+    return {mes:m,exito:exitoM,cap:capD>0?Math.round(capN/capD):0};
+  });
+  mkCh('chCapMes',{type:'bar',data:{
+    labels:MESES.map(function(m){return ML[m]||m;}),
+    datasets:[
+      {label:'% Visitas exitosas',data:monthData.map(function(d){return d.exito;}),
+       backgroundColor:MESES.map(function(m){return sM.indexOf(m)>=0?'rgba(0,136,89,0.85)':'rgba(0,136,89,0.2)';}),
+       borderRadius:6,order:2},
+      {label:'% Capilaridad MODO',data:monthData.map(function(d){return d.cap;}),
+       type:'line',borderColor:'#FFC738',borderWidth:2.5,borderDash:[6,3],
+       pointBackgroundColor:'#FFC738',pointRadius:5,fill:false,order:1}
+    ]
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'top',labels:{font:{family:'Quicksand'},boxWidth:10}}},
+    scales:{y:{max:100,min:0,ticks:{callback:function(v){return v+'%';},font:{size:9}}}}}});
+
+  // ── Motivos por provincia: stacked bar ──
+  var motColors={'No sabe cobrar':'#7F77DD','No le interesa':'#FF5424','Inconvenientes MODO':'#FF8C00','Solo MP':'#FFC738','Clientes no pagan':'#0049C4','Inconvenientes QR':'#aaa'};
+  var motProvs=provsWithActivity.filter(function(p){return MK.some(function(k){return (scaledMot[p]||{})[k]>0;});});
+  mkCh('chMotProv',{type:'bar',data:{
+    labels:motProvs.map(function(p){return p.length>10?p.slice(0,9)+'\u2026':p;}),
+    datasets:MK.map(function(k){return{label:k,data:motProvs.map(function(p){return(scaledMot[p]||{})[k]||0;}),backgroundColor:motColors[k]||'#ccc',borderRadius:3};})
+  },options:{responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:true,position:'bottom',labels:{font:{family:'Quicksand',size:10},boxWidth:10}}},
+    scales:{x:{stacked:true,ticks:{font:{size:9}}},y:{stacked:true,ticks:{font:{size:9}}}}}});
+
+  // ── Motivos total ──
+  var mP=MK.map(function(k){return{k:k,v:mT[k]||0};}).filter(function(x){return x.v>0;}).sort(function(a,b){return b.v-a.v;});
+  mkCh('chMot',{type:'bar',data:{
+    labels:mP.map(function(x){return x.k;}),
+    datasets:[{data:mP.map(function(x){return x.v;}),backgroundColor:mP.map(function(x){return motColors[x.k]||'#aaa';}),borderRadius:6}]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false}},
+    scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:10}}}}}});
+
+  // ── Adquirencia ──
+  var totalVisitsAll=MESES.reduce(function(a,m){return a+(TR[m]||0);},0);
+  var filterVisits=gR('TOTAL',null);
+  var qScale=totalVisitsAll>0?filterVisits/totalVisitsAll:1;
+  var qColors={'Mercado Pago':'#C0392B','Payway':'#8E44AD','Fiserv':'#2980B9','Get Net':'#E67E22','Clover':'#27AE60','Nave':'#F39C12','+ Pagos':'#16A085','Otros':'#aaa'};
+  var qP=QR.labels.map(function(l,i){return{l:l,v:Math.round((QR.values[i]||0)*qScale)};}).filter(function(x){return x.v>0;}).sort(function(a,b){return b.v-a.v;});
+  mkCh('chQR',{type:'bar',data:{
+    labels:qP.map(function(x){return x.l;}),
+    datasets:[{data:qP.map(function(x){return x.v;}),backgroundColor:qP.map(function(x){return qColors[x.l]||'#aaa';}),borderRadius:6}]
+  },options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return ' '+c.parsed.x.toLocaleString('es-AR')+' comercios';}}}},
+    scales:{x:{ticks:{font:{size:9}}},y:{ticks:{font:{size:10}}}}}});
+
+  // ── Insights dinámicos adaptados al filtro ──
   var ci=document.getElementById('comIns');if(ci){
-    var totalQR=QR.values.reduce(function(a,b){return a+b;},0);
-    var mpV=QR.values[QR.labels.indexOf('Mercado Pago')]||0;
-    var pwV=QR.values[QR.labels.indexOf('Payway')]||0;
+    var periodLbl=sM.length===MESES.length?'acumulado Ene–May':sM.map(function(m){return ML[m]||m;}).join('+');
+    var provLbl=provsWithActivity.length===PROVS.length?'Total País':provsWithActivity.join(', ');
+    var topMot=top;
+    var topProv=motProvs.slice().sort(function(a,b){
+      return MK.reduce(function(s,k){return s+(scaledMot[b]||{})[k]||0;},0)-MK.reduce(function(s,k){return s+(scaledMot[a]||{})[k]||0;},0);
+    })[0]||'—';
+    var topMotPct=totNC>0?Math.round((mT[topMot]||0)/totNC*100):0;
+    var lowCap=sorted[0];
+    var highCap=sorted[sorted.length-1];
     ci.innerHTML=[
-      icard('Mercado Pago · Mayor competidor',fN(mpV)+' menciones en comercios auditados','El '+Math.round(mpV/Math.max(totalQR,1)*100)+'% de los QR alternativos es Mercado Pago. Payway: '+fN(pwV)+' ('+Math.round(pwV/Math.max(totalQR,1)*100)+'%).'),
-      icard('Tucumán · Barrera técnica',fN((MOT['Tucumán']&&MOT['Tucumán']['Inconvenientes MODO'])||0)+' "Inconvenientes MODO"','Única provincia donde los problemas técnicos dominan los no-cobros. Requiere soporte post-alta focalizado.'),
-      icard('Entre Ríos · Oportunidad formativa',fN((MOT['Entre Ríos']&&MOT['Entre Ríos']['No sabe cobrar'])||0)+' comercios no saben cobrar con MODO','Mayor proporción de "no sabe cobrar" del país. Recuperables con capacitación básica.'),
-      icard('Buenos Aires · Rechazo activo',fN((MOT['Buenos Aires']&&MOT['Buenos Aires']['No le interesa'])||0)+' "No le interesa"','Mayor rechazo explícito del país ('+Math.round(((MOT['Buenos Aires']&&MOT['Buenos Aires']['No le interesa'])||0)/Math.max(gR('Buenos Aires',null)||1,1)*100)+'% de visitas). Revisar propuesta de valor.'),
-      icard('Mendoza · Señalización deficiente',fN((EP['Mendoza']&&EP['Mendoza']['Mal señalizados'])||0)+' mal señalizados','Concentra la mayoría de los "Mal señalizados" del país. Posible falta de stock POP o baja formación de promotores.'),
-      icard('Benchmark','CABA · Córdoba · Jujuy con capilaridad ≥ 96%','Territorio maduro. Modelos replicables para provincias en expansión.')
+      icard('Capilaridad · '+periodLbl,capP+'% promedio · '+provsWithActivity.length+' provincia(s)',
+        highCap?highCap.Provincia+' lidera con '+highCap.capilaridad+'%'+(lowCap&&lowCap!==highCap?' · '+lowCap.Provincia+' en '+lowCap.capilaridad+'%':''):'Sin datos'),
+      icard('Principal motivo no cobro · '+periodLbl,topMot+' ('+topMotPct+'% de no-cobros)',
+        'Total estimado en período: '+fN(totNC)+' no-cobros en '+provLbl),
+      icard('Éxito de señalización',Math.round(exitoPct.reduce(function(a,v){return a+v;},0)/Math.max(exitoPct.length,1))+'% promedio · '+periodLbl,
+        sorted.filter(function(s,i){return exitoPct[i]<70;}).map(function(s,i){return s.Provincia+': '+exitoPct[sorted.indexOf(s)]+'%';}).join(' · ')||'Todas las provincias por encima del 70%'),
+      icard('Adquirencia · Mercado Pago',fN(Math.round((QR.values[0]||0)*qScale))+' comercios en el período',
+        'Representa el '+(qP.length>0?Math.round(qP[0].v/Math.max(qP.reduce(function(a,x){return a+x.v;},0),1)*100):0)+'% de la adquirencia alternativa en '+provLbl)
     ].join('');
   }
 }
@@ -550,14 +828,17 @@ function initMap(){
     if(!pt.lat||!pt.lng)return;
     var mk=L.circleMarker([pt.lat,pt.lng],{radius:5,fillColor:cm[pt.e]||'#888',color:'#fff',weight:1,fillOpacity:.8}).addTo(mapI);
     mk.bindPopup('<b>'+pt.e+'</b><br>'+(pt.p||'')+' · '+(pt.c||'')+'<br>'+(pt.m||''));
-    mk._e=pt.e;mk._p=pt.p;mapMk.push(mk);
+    mk._e=pt.e;mk._p=pt.p;mk._m=pt.m;mapMk.push(mk);
   });
 }
 function tMapE(e,btn){btn.classList.toggle('act');if(mapAct.has(e))mapAct.delete(e);else mapAct.add(e);filterMap();}
 function filterMap(){
   if(!mapI)return;
   mapMk.forEach(function(mk){
-    var show=mapAct.has(mk._e)&&(!sP.length||sP.indexOf(mk._p)>=0);
+    var showE=mapAct.has(mk._e);
+    var showP=!sP.length||sP.indexOf(mk._p)>=0;
+    var showM=sM.length===MESES.length||sM.indexOf(mk._m||'')>=0;
+    var show=showE&&showP&&showM;
     if(show&&!mapI.hasLayer(mk))mapI.addLayer(mk);
     else if(!show&&mapI.hasLayer(mk))mapI.removeLayer(mk);
   });
@@ -565,31 +846,27 @@ function filterMap(){
 
 // ═══ S4 CHARTS ═══════════════════════════════════════════════════
 function s4Charts(){
-  var fS=PS.filter(function(s){return !sP.length||sP.indexOf(s.Provincia)>=0;});
-  mkCh('chI1',{type:'bar',data:{labels:fS.map(function(s){return s.Provincia.length>10?s.Provincia.slice(0,9)+'…':s.Provincia;}),datasets:[{label:'% Fallidos',data:fS.map(function(s){return s.tasa_fallidos;}),backgroundColor:'#FF5424',borderRadius:4},{label:'% Capilaridad',data:fS.map(function(s){return s.capilaridad;}),backgroundColor:'#008859',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{family:'Quicksand'},boxWidth:10}}},scales:{y:{max:100,ticks:{callback:function(v){return v+'%';},font:{size:9}}},x:{ticks:{font:{size:9}}}}}});
-  var eT={};gP().forEach(function(p){var e=EP[p]||{};Object.keys(e).forEach(function(k){eT[k]=(eT[k]||0)+e[k];});});
-  var ep=Object.entries(eT).sort(function(a,b){return b[1]-a[1];});
-  mkCh('chI2',{type:'doughnut',data:{labels:ep.map(function(x){return x[0];}),datasets:[{data:ep.map(function(x){return x[1];}),backgroundColor:ep.map(function(x){return EC[x[0]]||'#ccc';})}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:12}}}}});
+  // Insights — only analysis cards (no charts)
+  var filtPS=PS.filter(function(s){return !sP.length||sP.indexOf(s.Provincia)>=0;});
   var r=gR('TOTAL',null),o=gO('TOTAL',null);
-  var capProm=Math.round(fS.reduce(function(a,s){return a+s.capilaridad;},0)/Math.max(fS.length,1));
-  var mT={};MK.forEach(function(k){mT[k]=0;});gP().forEach(function(p){var md=MOT[p]||{};MK.forEach(function(k){mT[k]=(mT[k]||0)+(md[k]||0);});});
+  var capProm=Math.round(filtPS.reduce(function(a,s){return a+s.capilaridad;},0)/Math.max(filtPS.length,1));
+  var mT={};MK.forEach(function(k){mT[k]=0;});(sP.length?sP:PROVS).forEach(function(p){var md=MOT[p]||{};MK.forEach(function(k){mT[k]=(mT[k]||0)+(md[k]||0);});});
   document.getElementById('insC').innerHTML=[
     icard('Cumplimiento',fP(pct(r,o))+' del objetivo',fN(r)+' visitas reales vs. '+fN(o)+' planificadas en el período seleccionado.'),
-    icard('Capilaridad MODO',capProm+'% promedio','Comercios que cobran con MODO. '+fS.slice(0,2).map(function(s){return s.Provincia+': '+s.capilaridad+'%';}).join(' · ')),
-    icard('Tasa de éxito',Math.round(fS.reduce(function(a,s){return a+s.tasa_exito;},0)/Math.max(fS.length,1))+'% promedio','Visitas que resultaron en señalización exitosa (Visita Completa + Señalizado).'),
-    icard('Fallidos',Math.round(fS.reduce(function(a,s){return a+s.tasa_fallidos;},0)/Math.max(fS.length,1))+'% promedio',(fS.filter(function(s){return s.tasa_fallidos>10;}).map(function(s){return s.Provincia+' ('+s.tasa_fallidos+'%)';}).join(', '))||'Todas bajo umbral del 10%')
+    icard('Capilaridad MODO',capProm+'% promedio','Comercios que cobran con MODO. '+filtPS.slice(0,2).map(function(s){return s.Provincia+': '+s.capilaridad+'%';}).join(' · ')),
+    icard('Tasa de éxito',Math.round(filtPS.reduce(function(a,s){return a+s.tasa_exito;},0)/Math.max(filtPS.length,1))+'% promedio','Visitas que resultaron en señalización exitosa (Visita Completa + Señalizado).'),
+    icard('Fallidos',Math.round(filtPS.reduce(function(a,s){return a+s.tasa_fallidos;},0)/Math.max(filtPS.length,1))+'% promedio',(filtPS.filter(function(s){return s.tasa_fallidos>10;}).map(function(s){return s.Provincia+' ('+s.tasa_fallidos+'%)';}).join(', '))||'Todas bajo umbral del 10%')
   ].join('');
   document.getElementById('opC').innerHTML=[
-    icard('Córdoba · Brecha de volumen',fN(gR('Córdoba',null))+' reales vs. '+fN(gO('Córdoba',null))+' planificadas','Excelente capilaridad sobre lo visitado ('+(PS.find(function(s){return s.Provincia==='Córdoba';})||{capilaridad:0}).capilaridad+'%) pero volumen de visitas insuficiente. Necesita más cobertura territorial.'),
+    icard('Córdoba · Brecha de volumen',fN(gR('Córdoba',null))+' reales vs. '+fN(gO('Córdoba',null))+' planificadas','Excelente capilaridad sobre lo visitado ('+(PS.find(function(s){return s.Provincia==='Córdoba';})||{capilaridad:0}).capilaridad+'%) pero volumen de visitas insuficiente.'),
     icard('Tucumán · Barrera técnica',fN(MOT['Tucumán']&&MOT['Tucumán']['Inconvenientes MODO']||0)+' "Inconvenientes MODO"','Intervención focalizada en soporte técnico post-alta. Patrón único en el país.'),
     icard('Entre Ríos · Capacitación',fN(MOT['Entre Ríos']&&MOT['Entre Ríos']['No sabe cobrar']||0)+' comercios sin conocimiento de cobro','Recuperables con capacitación básica. Bajo costo de conversión.'),
-    icard('Buenos Aires · Propuesta de valor',fN(MOT['Buenos Aires']&&MOT['Buenos Aires']['No le interesa']||0)+' rechazos activos','Revisar discurso comercial y propuesta de valor diferencial frente a Mercado Pago en el conurbano.'),
-    icard('Mendoza · Material POP',fN(EP['Mendoza']&&EP['Mendoza']['Mal señalizados']||0)+' mal señalizados en Mendoza Capital','Revisar stock de material POP y formación de promotores. Patrón anómalo vs. resto del país.'),
-    icard('Benchmark · Provincias maduras','CABA + Córdoba + Jujuy ≥ 96% capilaridad','Modelos de expansión replicables. Enfoque en penetración profunda y fidelización.')
+    icard('Buenos Aires · Propuesta de valor',fN(MOT['Buenos Aires']&&MOT['Buenos Aires']['No le interesa']||0)+' rechazos activos','Revisar discurso comercial y propuesta de valor diferencial frente a Mercado Pago.'),
+    icard('Mendoza · Material POP',fN(EP['Mendoza']&&EP['Mendoza']['Mal señalizados']||0)+' mal señalizados en Mendoza Capital','Revisar stock de material POP y formación de promotores.'),
+    icard('Benchmark · Provincias maduras','CABA + Córdoba + Jujuy ≥ 96% capilaridad','Modelos de expansión replicables.')
   ].join('');
 }
 
-// ═══ FINANCIERO ══════════════════════════════════════════════════
 function chkFin(){
   if(document.getElementById('finPW').value===FIN_PW){
     finOK=true;document.getElementById('finLock').style.display='none';document.getElementById('finCnt').style.display='block';finCharts();
@@ -598,8 +875,22 @@ function chkFin(){
 function finCharts(){
   if(!finOK)return;
   var provs=gP(),fT=0,pT=0,bE={};
-  provs.forEach(function(p){
+
+  // EP has cumulative totals (all months). Scale proportionally using REALES.
+  // epScaled(p, months) distributes EP counts for province p to the given months.
+  function epScaled(p,months){
     var ec=EP[p]||{};
+    var totalReal=MESES.reduce(function(a,m){return a+((REALES[p]||{})[m]||0);},0);
+    var selReal=months.reduce(function(a,m){return a+((REALES[p]||{})[m]||0);},0);
+    var scale=totalReal>0?selReal/totalReal:0;
+    var out={};
+    Object.keys(ec).forEach(function(e){out[e]=ec[e]*scale;});
+    return out;
+  }
+
+  // KPIs & table: aggregate over selected months
+  provs.forEach(function(p){
+    var ec=epScaled(p,sM);
     Object.entries(ec).forEach(function(kv){
       var e=kv[0],cnt=kv[1];
       if(!bE[e])bE[e]={cnt:0,fac:0,pot:0};
@@ -614,8 +905,21 @@ function finCharts(){
   document.getElementById('fP').textContent=fARS(pT);
   document.getElementById('fA').textContent=fARS(aho);
   document.getElementById('fPct').textContent=pctA+'%';
-  var mR=sM.map(function(m){return provs.reduce(function(a,p){var ec=EP[p]||{};return a+Object.entries(ec).reduce(function(b,kv){return b+kv[1]*((TAR[kv[0]]||{})[m]||0);},0);},0);});
-  var mP=sM.map(function(m){return provs.reduce(function(a,p){var ec=EP[p]||{};var cnt=Object.values(ec).reduce(function(x,y){return x+y;},0);return a+cnt*((TAR['Visita Completa']||{})[m]||0);},0);});
+
+  // Monthly bar chart: each bar uses EP scaled to that single month
+  var mR=sM.map(function(m){
+    return provs.reduce(function(a,p){
+      var ec=epScaled(p,[m]);
+      return a+Object.entries(ec).reduce(function(b,kv){return b+kv[1]*((TAR[kv[0]]||{})[m]||0);},0);
+    },0);
+  });
+  var mP=sM.map(function(m){
+    return provs.reduce(function(a,p){
+      var ec=epScaled(p,[m]);
+      var cnt=Object.values(ec).reduce(function(x,y){return x+y;},0);
+      return a+cnt*((TAR['Visita Completa']||{})[m]||0);
+    },0);
+  });
   mkCh('chFin',{type:'bar',data:{labels:sM.map(function(m){return ML[m]||m;}),datasets:[{label:'Facturación real',data:mR,backgroundColor:'#008859',borderRadius:6,order:1},{label:'Potencial sin auditoría',data:mP,type:'line',borderColor:'#FFC738',borderWidth:2,fill:false,order:0}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:true,position:'top',labels:{font:{family:'Quicksand'},boxWidth:10}}},scales:{y:{ticks:{callback:function(v){return '$'+Math.round(v/1000000)+'M';}}}}}});
   var rows=Object.entries(bE).sort(function(a,b){return b[1].fac-a[1].fac;});
   document.getElementById('tbFin').innerHTML=rows.map(function(kv){var e=kv[0],v=kv[1];return '<tr><td>'+e+'</td><td>'+fN(v.cnt)+'</td><td>'+fARS(v.cnt>0?v.fac/v.cnt:0)+'</td><td>'+fARS(v.fac)+'</td><td>'+(fT>0?Math.round(v.fac/fT*100):0)+'%</td></tr>';}).join('')+'<tr class="tot"><td>TOTAL</td><td></td><td></td><td>'+fARS(fT)+'</td><td>100%</td></tr>';
@@ -626,8 +930,8 @@ function setCF(f,btn){cF=f;document.querySelectorAll('[data-cf]').forEach(functi
 function rCities(){
   var q=(document.getElementById('cSr').value||'').toLowerCase();
 
-  // For each city: determine in-plan status based on selected months
-  // A city is "in plan" for the period if sum of objectives > 0 for selected months
+  // ── Compute estimated actual visits per city per selected months ──
+  // Distribute REALES proportionally using CITY_PLANES
   function getCityPlan(prov, ciudad){
     var key=prov+'___'+ciudad;
     var cp=CITY_PLANES[key];
@@ -636,23 +940,81 @@ function rCities(){
     return {planned:planned, inPlan:planned>0};
   }
 
-  var all=(CIT||[]).filter(function(c){
-    if(sP.length&&sP.indexOf(c.prov)<0)return false;
-    if(q&&!(c.ciudad||'').toLowerCase().includes(q)&&!(c.prov||'').toLowerCase().includes(q))return false;
-    var cp=getCityPlan(c.prov,c.ciudad);
-    var hasV=c.ids>0, inPlan=cp.inPlan;
-    if(cF==='active')   return hasV&&inPlan;        // visitas + en el plan del período
-    if(cF==='out_act')  return hasV&&!inPlan;       // visitas PERO no estaba planificada este período
-    if(cF==='no_act')   return !hasV&&inPlan;       // estaba planificada PERO sin visitas
-    return true;
+  // For each province+month, compute total planned across cities
+  function getProvMonthPlanned(prov, mes){
+    var tot=0;
+    Object.keys(CITY_PLANES).forEach(function(k){
+      if(CITY_PLANES[k].prov===prov) tot+=(CITY_PLANES[k][mes]||0);
+    });
+    return tot;
+  }
+
+  // Estimate actual visits for a city in the selected period
+  function getCityActuals(prov, ciudad){
+    var key=prov+'___'+ciudad;
+    var cp=CITY_PLANES[key];
+    var total=0;
+    sM.forEach(function(m){
+      var realProv=(REALES[prov]||{})[m]||0;
+      if(realProv===0) return;
+      var provPlanned=getProvMonthPlanned(prov, m);
+      if(provPlanned>0 && cp){
+        // Proportional: city share of province real visits
+        total+=Math.round(realProv*((cp[m]||0)/provPlanned));
+      } else if(!cp){
+        // City not in plan — can't distribute
+      }
+    });
+    return total;
+  }
+
+  // Detect if province had ANY unplanned activity in selected months
+  // (visits that can't be assigned to any planned city)
+  function getUnplannedProvActuals(prov){
+    var result=[];
+    sM.forEach(function(m){
+      var realProv=(REALES[prov]||{})[m]||0;
+      if(realProv===0) return;
+      var provPlanned=getProvMonthPlanned(prov, m);
+      if(provPlanned===0) result.push(m); // entire province had visits but no plan
+    });
+    return result;
+  }
+
+  // Build list of all cities (from CITY_PLANES + CIT)
+  var allCityKeys={};
+  // From CITY_PLANES
+  Object.keys(CITY_PLANES).forEach(function(k){
+    var cp=CITY_PLANES[k];
+    allCityKeys[k]={prov:cp.prov, ciudad:cp.ciudad};
+  });
+  // From CIT (may have cities not in CITY_PLANES)
+  (CIT||[]).forEach(function(c){
+    var k=c.prov+'___'+c.ciudad;
+    if(!allCityKeys[k]) allCityKeys[k]={prov:c.prov, ciudad:c.ciudad};
+  });
+
+  var all=Object.values(allCityKeys).filter(function(c){
+    if(sP.length&&sP.indexOf(c.prov)<0) return false;
+    if(q&&!(c.ciudad||'').toLowerCase().includes(q)&&!(c.prov||'').toLowerCase().includes(q)) return false;
+
+    var cp=getCityPlan(c.prov, c.ciudad);
+    var actuals=getCityActuals(c.prov, c.ciudad);
+    var hasV=actuals>0;
+    var inPlan=cp.inPlan;
+
+    if(cF==='active')   return hasV && inPlan;
+    if(cF==='out_act')  return hasV && !inPlan;
+    if(cF==='no_act')   return !hasV && inPlan;
+    return inPlan||hasV; // 'all': show cities with any plan OR any activity
   }).slice(0,300);
 
   var tb=document.getElementById('tbCity');if(!tb)return;
   tb.innerHTML=all.map(function(c){
-    var cp=getCityPlan(c.prov,c.ciudad);
-    var hasV=c.ids>0, inPlan=cp.inPlan, planned=cp.planned;
+    var cp=getCityPlan(c.prov, c.ciudad);
+    var actuals=getCityActuals(c.prov, c.ciudad);
+    var hasV=actuals>0, inPlan=cp.inPlan, planned=cp.planned;
 
-    // Estado: cruce entre visitas y plan del período seleccionado
     var estado, sit;
     if(hasV&&inPlan){
       estado='<span style="background:#e6f5ee;color:#00471B;padding:2px 8px;border-radius:999px;font-size:9px;font-weight:700">✅ Activa en roadmap</span>';
@@ -668,16 +1030,15 @@ function rCities(){
       sit='<span style="background:#f0f0f0;color:#888;padding:2px 7px;border-radius:999px;font-size:9px;font-weight:700">Sin asignar</span>';
     }
 
-    // Planned vs actual bar
     var planBar='—';
     if(planned>0){
-      var pctV=Math.min(Math.round(c.ids/planned*100),150);
+      var pctV=Math.min(Math.round(actuals/planned*100),150);
       var barCol=pctV>=95?'#008859':pctV>=70?'#FFC738':'#FF5424';
       planBar='<div style="display:flex;align-items:center;gap:6px;min-width:120px">'+
         '<div style="flex:1;height:6px;background:#eee;border-radius:3px;overflow:hidden;min-width:60px">'+
           '<div style="width:'+Math.min(pctV,100)+'%;height:100%;background:'+barCol+';border-radius:3px"></div>'+
         '</div>'+
-        '<span style="font-size:10px;font-family:var(--f2);color:#666;white-space:nowrap">'+fN(c.ids)+'/'+fN(planned)+'</span>'+
+        '<span style="font-size:10px;font-family:var(--f2);color:#666;white-space:nowrap">'+fN(actuals)+'/'+fN(planned)+'</span>'+
       '</div>';
     }
 
@@ -690,15 +1051,12 @@ function rCities(){
     '</tr>';
   }).join('');
 
-  // Update table header to show Real/Objetivo
-  var thead=document.querySelector('#s6 table thead tr');
-  if(thead)thead.innerHTML='<th>Provincia</th><th>Ciudad</th><th>Estado</th><th>Situación</th><th>Real / Objetivo</th>';
-
-  var act=all.filter(function(c){return c.ids>0&&getCityPlan(c.prov,c.ciudad).inPlan;}).length;
-  var noA=all.filter(function(c){return !c.ids&&getCityPlan(c.prov,c.ciudad).inPlan;}).length;
-  var outAct=all.filter(function(c){return c.ids>0&&!getCityPlan(c.prov,c.ciudad).inPlan;}).length;
+  // Counter
+  var actInPlan=all.filter(function(c){return getCityActuals(c.prov,c.ciudad)>0&&getCityPlan(c.prov,c.ciudad).inPlan;}).length;
+  var noAct=all.filter(function(c){return getCityActuals(c.prov,c.ciudad)===0&&getCityPlan(c.prov,c.ciudad).inPlan;}).length;
+  var outAct=all.filter(function(c){return getCityActuals(c.prov,c.ciudad)>0&&!getCityPlan(c.prov,c.ciudad).inPlan;}).length;
   document.getElementById('cityC').textContent=
-    all.length+' ciudades · '+act+' activas en roadmap · '+noA+' en roadmap sin actividad · '+outAct+' con actividad fuera del plan';
+    all.length+' ciudades · '+actInPlan+' activas en roadmap · '+noAct+' en roadmap sin actividad · '+outAct+' con actividad fuera del plan';
 }
 
 function refresh(){
@@ -707,7 +1065,7 @@ function refresh(){
   if(id==='s1')s1Charts();
   else if(id==='s2')s2Charts();
   else if(id==='s3')filterMap();
-  else if(id==='s4')s4Charts();
+  else if(id==='s4'){s4Charts();}
   else if(id==='s5'&&finOK)finCharts();
   else if(id==='s6')rCities();
   // Always update KPIs/gauges for s1 even if not active
